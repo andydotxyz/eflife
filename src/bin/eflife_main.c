@@ -26,8 +26,8 @@ eflife_tick(void *data)
 {
    Evas_Object *win = data;
 
-   eflife_life_nextgen();
-   eflife_life_render(win);
+   eflife_board_nextgen();
+   eflife_render(win);
 
    return ECORE_CALLBACK_RENEW;
 }
@@ -36,7 +36,8 @@ static Evas_Object *
 eflife_win_setup(void)
 {
    Evas_Object *win;
-   Evas_Coord w = 320, h = 320;
+   Evas_Coord w = 10 * EFLIFE_BOARD_WIDTH * elm_config_scale_get();
+   Evas_Coord h = 10 * EFLIFE_BOARD_HEIGHT * elm_config_scale_get();;
 
    win = elm_win_util_standard_add("main", "EFLife");
    if (!win) return NULL;
@@ -45,8 +46,8 @@ eflife_win_setup(void)
    evas_object_smart_callback_add(win, "delete,request", _eflife_win_del, NULL);
    evas_object_resize(win, w, h);
 
-   eflife_life_nextgen();
-   eflife_life_render(win);
+   eflife_board_init();
+   eflife_render_init(win);
 
    evas_object_show(win);
 

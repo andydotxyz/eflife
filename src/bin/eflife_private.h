@@ -3,11 +3,17 @@
 
 #include <Evas.h>
 
-#define eflife_board_size 3
+#define EFLIFE_BOARD_WIDTH 47
+#define EFLIFE_BOARD_HEIGHT 31
+
 extern int *eflife_board;
 
-void eflife_life_nextgen(void);
+void eflife_board_init(void);
 
-void eflife_life_render(Evas_Object *win);
+void eflife_board_nextgen(void);
+
+void eflife_render_init(Evas_Object *win);
+
+void eflife_render(Evas_Object *win);
 
 #endif
