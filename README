@@ -1,0 +1,7 @@
+EFL Game of Life
+
+# ./autogen.sh
+# make
+# ./src/bin/eflife
+
+See README.md for more
