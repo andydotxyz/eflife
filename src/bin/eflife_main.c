@@ -27,9 +27,16 @@ eflife_tick(void *data)
    Evas_Object *win = data;
 
    eflife_board_nextgen();
-   eflife_render(win);
+   eflife_render_refresh(win);
 
    return ECORE_CALLBACK_RENEW;
+}
+
+static void
+eflife_win_resize(void *data EINA_UNUSED, Evas *e EINA_UNUSED, Evas_Object *obj,
+                           void *event_info EINA_UNUSED)
+{
+   eflife_render_layout(obj);
 }
 
 static Evas_Object *
@@ -49,6 +56,7 @@ eflife_win_setup(void)
    eflife_board_init();
    eflife_render_init(win);
 
+   evas_object_event_callback_add(win, EVAS_CALLBACK_RESIZE, eflife_win_resize, NULL);
    evas_object_show(win);
 
    return win;
@@ -109,7 +117,7 @@ elm_main(int argc EINA_UNUSED, char **argv EINA_UNUSED)
    if (!(win = eflife_win_setup()))
      goto end;
 
-   ecore_timer_add(0.25, eflife_tick, win);
+   ecore_timer_add(0.2, eflife_tick, win);
    elm_run();
 
  end:

@@ -13,7 +13,7 @@ void eflife_board_init(void);
 void eflife_board_nextgen(void);
 
 void eflife_render_init(Evas_Object *win);
-
-void eflife_render(Evas_Object *win);
+void eflife_render_layout(Evas_Object *win);
+void eflife_render_refresh(Evas_Object *win);
 
 #endif
