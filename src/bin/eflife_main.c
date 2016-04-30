@@ -55,6 +55,7 @@ eflife_win_setup(void)
 
    eflife_board_init();
    eflife_render_init(win);
+   eflife_render_refresh(win);
 
    evas_object_event_callback_add(win, EVAS_CALLBACK_RESIZE, eflife_win_resize, NULL);
    evas_object_show(win);

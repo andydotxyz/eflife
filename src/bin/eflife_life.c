@@ -6,7 +6,7 @@
 
 static int gen = 0;
 
-int *eflife_board;
+int *eflife_board, *eflife_board_prev;
 static int *_eflife_board_1, *_eflife_board_2;
 
 void
@@ -34,6 +34,7 @@ eflife_board_init()
    _eflife_board_1[33 + 16 * EFLIFE_BOARD_WIDTH] = 1;
 
    eflife_board = _eflife_board_1;
+   eflife_board_prev = _eflife_board_2;
 }
 
 int
@@ -108,6 +109,7 @@ eflife_board_nextgen()
             }
        }
 
+   eflife_board_prev = eflife_board;
    eflife_board = work;
 }
 

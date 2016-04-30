@@ -6,7 +6,7 @@
 #define EFLIFE_BOARD_WIDTH 47
 #define EFLIFE_BOARD_HEIGHT 31
 
-extern int *eflife_board;
+extern int *eflife_board, *eflife_board_prev;
 
 void eflife_board_init(void);
 

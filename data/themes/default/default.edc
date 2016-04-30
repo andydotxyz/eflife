@@ -1,0 +1,41 @@
+collections {
+   group {
+      name: "cell";
+      parts {
+      	 part { name: "background"; type: RECT;
+	    description {
+	       state: "default" 0.0;
+               rel1 {relative: 0.0 0.0;}
+               rel2 {relative: 1.0 1.0;}
+               color: 221 221 221 255;
+	    }
+	    description {
+	       state: "alive" 0.0;
+               rel1 {relative: 0.0 0.0;}
+               rel2 {relative: 1.0 1.0;}
+               color: 31 31 31 255;
+	    }
+
+	 }
+      }
+
+      programs {
+         program {
+            name: "live";
+            source: "";
+            signal: "live";
+            action: STATE_SET "alive" 0.0;
+            target: "background";
+            transition: DECELERATE_FACTOR 0.5 3;
+         }
+         program {
+            name: "die";
+            source: "";
+            signal: "die";
+            action: STATE_SET "default" 0.0;
+            target: "background";
+            transition: DECELERATE_FACTOR 0.5 3;
+         }
+      }
+   }
+}

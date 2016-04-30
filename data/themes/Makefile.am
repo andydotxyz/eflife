@@ -1,3 +1,4 @@
 MAINTAINERCLEANFILES = Makefile.in
 
-SUBDIRS = desktop themes
+SUBDIRS = default
+

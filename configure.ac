@@ -54,6 +54,8 @@ Makefile
 data/Makefile
 data/desktop/Makefile
 data/desktop/eflife.desktop
+data/themes/Makefile
+data/themes/default/Makefile
 doc/Makefile
 packaging/Makefile
 packaging/slackware/Makefile

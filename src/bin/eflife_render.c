@@ -3,16 +3,31 @@
 #endif
 
 #include <Evas.h>
+#include <Elementary.h>
 
 #include "eflife_private.h"
 
 Evas_Object **_eflife_cells;
+
+const char *
+_theme_default_get(void)
+{
+   static char path[PATH_MAX];
+
+   if (path[0]) return path;
+
+   snprintf(path, sizeof(path),
+            "%s/themes/default.edj", elm_app_data_dir_get());
+
+   return path;
+}
 
 void
 eflife_render_init(Evas_Object *win)
 {
    Evas_Object *rect;
    int x, y, i;
+   const char *theme = _theme_default_get();
 
    _eflife_cells = calloc(1, sizeof(Evas_Object *) * EFLIFE_BOARD_WIDTH * EFLIFE_BOARD_HEIGHT);
 
@@ -20,8 +35,10 @@ eflife_render_init(Evas_Object *win)
      for (x = 0; x < EFLIFE_BOARD_WIDTH; x++)
        {
           i = y * EFLIFE_BOARD_WIDTH + x;
-          rect = evas_object_rectangle_add(win);
+          rect = edje_object_add(win);
           evas_object_show(rect);
+
+          edje_object_file_set(rect, theme, "cell");
 
           _eflife_cells[i] = rect;
        }
@@ -63,12 +80,14 @@ eflife_render_refresh(Evas_Object *win EINA_UNUSED)
      for (x = 0; x < EFLIFE_BOARD_WIDTH; x++)
        {
           i = y * EFLIFE_BOARD_WIDTH + x;
+          if (eflife_board[i] == eflife_board_prev[i])
+            continue;
+
           rect = _eflife_cells[i];
           if (eflife_board[i])
-            evas_object_color_set(rect, 32, 32, 32, 255);
+            edje_object_signal_emit(rect, "live", "");
           else
-            evas_object_color_set(rect, 255, 255, 255, 255);
-
+            edje_object_signal_emit(rect, "die", "");
        }
 }
 
