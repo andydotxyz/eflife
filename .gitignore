@@ -13,6 +13,8 @@
 /src/bin/eflife
 /src/tests/eflife_tests
 packaging/slackware/eflife-*.txz
+data/desktop/eflife.desktop
+doc/eflife.1
 eflife-*.tar.?z*
 po/*.gmo
 po/POTFILES
