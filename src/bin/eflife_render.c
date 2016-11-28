@@ -47,6 +47,23 @@ eflife_render_init(Evas_Object *win)
 }
 
 void
+eflife_render_cell_for_coords(Evas_Object *win, Evas_Coord cx, Evas_Coord cy,
+                              int *x, int *y)
+{
+   int cellx, celly;
+   Evas_Coord ww, wh;
+
+   evas_object_geometry_get(win, NULL, NULL, &ww, &wh);
+   cellx = cx / ((double) ww / EFLIFE_BOARD_WIDTH);
+   celly = cy / ((double) wh / EFLIFE_BOARD_HEIGHT);
+
+   if (x)
+     *x = cellx;
+   if (y)
+     *y = celly;
+}
+
+void
 eflife_render_layout(Evas_Object *win)
 {
    Evas_Coord ww, wh;
@@ -71,23 +88,29 @@ eflife_render_layout(Evas_Object *win)
 }
 
 void
-eflife_render_refresh(Evas_Object *win EINA_UNUSED)
+eflife_render_cell(Evas_Object *win EINA_UNUSED, int x, int y)
 {
    Evas_Object *rect;
-   int x, y, i;
+   int i;
 
-   for (y = 0; y < EFLIFE_BOARD_HEIGHT; y++)
-     for (x = 0; x < EFLIFE_BOARD_WIDTH; x++)
-       {
-          i = y * EFLIFE_BOARD_WIDTH + x;
+             i = y * EFLIFE_BOARD_WIDTH + x;
           if (eflife_board[i] == eflife_board_prev[i])
-            continue;
+            return;
 
           rect = _eflife_cells[i];
           if (eflife_board[i])
             edje_object_signal_emit(rect, "live", "");
           else
             edje_object_signal_emit(rect, "die", "");
-       }
+}
+
+void
+eflife_render_refresh(Evas_Object *win EINA_UNUSED)
+{
+   int x, y;
+
+   for (y = 0; y < EFLIFE_BOARD_HEIGHT; y++)
+     for (x = 0; x < EFLIFE_BOARD_WIDTH; x++)
+       eflife_render_cell(win, x, y);
 }
 

@@ -21,22 +21,38 @@ _eflife_win_del(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *even
    elm_exit();
 }
 
-static Eina_Bool
-eflife_tick(void *data)
-{
-   Evas_Object *win = data;
-
-   eflife_board_nextgen();
-   eflife_render_refresh(win);
-
-   return ECORE_CALLBACK_RENEW;
-}
-
 static void
 eflife_win_resize(void *data EINA_UNUSED, Evas *e EINA_UNUSED, Evas_Object *obj,
                            void *event_info EINA_UNUSED)
 {
    eflife_render_layout(obj);
+}
+
+static void
+_eflife_win_touch(void *data EINA_UNUSED, Evas *e EINA_UNUSED, Evas_Object *win,
+                  void *event_info)
+{
+   int cellx, celly, i;
+   Evas_Event_Mouse_Down *ev;
+
+   ev = event_info;
+   eflife_render_cell_for_coords(win, ev->output.x, ev->output.y, &cellx, &celly);
+
+   i = celly * EFLIFE_BOARD_WIDTH + cellx;
+   eflife_board[i] = EINA_TRUE;
+   eflife_render_cell(win, cellx, celly);
+}
+
+static void
+_eflife_key_down(void *data EINA_UNUSED, Evas *e EINA_UNUSED, Evas_Object *win EINA_UNUSED,
+                 void *event_info)
+{
+   Evas_Event_Key_Down *ev;
+
+   ev = event_info;
+   printf("key %s\n", ev->key);
+   if (!strcmp(ev->key, "space"))
+     eflife_board_pause_toggle();
 }
 
 static Evas_Object *
@@ -58,6 +74,8 @@ eflife_win_setup(void)
    eflife_render_refresh(win);
 
    evas_object_event_callback_add(win, EVAS_CALLBACK_RESIZE, eflife_win_resize, NULL);
+   evas_object_event_callback_add(win, EVAS_CALLBACK_MOUSE_DOWN, _eflife_win_touch, NULL);
+   evas_object_event_callback_add(win, EVAS_CALLBACK_KEY_DOWN, _eflife_key_down, NULL);
    evas_object_show(win);
 
    return win;
@@ -118,7 +136,7 @@ elm_main(int argc EINA_UNUSED, char **argv EINA_UNUSED)
    if (!(win = eflife_win_setup()))
      goto end;
 
-   ecore_timer_add(0.2, eflife_tick, win);
+   eflife_board_run(win);
    elm_run();
 
  end:

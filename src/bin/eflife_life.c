@@ -2,12 +2,29 @@
 # include "config.h"
 #endif
 
+#include <Ecore.h>
+
 #include "eflife_private.h"
 
 static int gen = 0;
 
 int *eflife_board, *eflife_board_prev;
 static int *_eflife_board_1, *_eflife_board_2;
+static Eina_Bool _eflife_paused;
+
+static Eina_Bool
+_eflife_board_tick(void *data)
+{
+   Evas_Object *win = data;
+
+   if (_eflife_paused)
+     return ECORE_CALLBACK_RENEW;
+
+   eflife_board_nextgen();
+   eflife_render_refresh(win);
+
+   return ECORE_CALLBACK_RENEW;
+}
 
 void
 eflife_board_init()
@@ -35,6 +52,13 @@ eflife_board_init()
 
    eflife_board = _eflife_board_1;
    eflife_board_prev = _eflife_board_2;
+}
+
+void
+eflife_board_run(Evas_Object *win)
+{
+   _eflife_paused = EINA_FALSE;
+   ecore_timer_add(0.2, _eflife_board_tick, win);
 }
 
 int
@@ -111,5 +135,11 @@ eflife_board_nextgen()
 
    eflife_board_prev = eflife_board;
    eflife_board = work;
+}
+
+void
+eflife_board_pause_toggle()
+{
+   _eflife_paused = !_eflife_paused;
 }
 
